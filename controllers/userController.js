@@ -1,6 +1,6 @@
 const User = require('../models/user');
-
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 // handle errors
 const handleErrors = (err) => {
     console.log(err.message, err.code);
@@ -36,20 +36,14 @@ const handleErrors = (err) => {
 
 
 const register = async(req,res)=>{
-    const {email,password,role,companyName,address,phoneNumber,registrationNumber,domain,wallet} = req.body;
-
+    
     try{
-        const userCreated = await User.create({
-            email,
-            password,
-            role,
-            companyName,
-            address,
-            phoneNumber,
-            registrationNumber,
-            domain,
-            wallet
-        });
+        const data = req.body;
+        const userCreated = new User(data);
+    
+        const salt = bcrypt.genSaltSync(10);
+        const cryptedPass = bcrypt.hashSync(data.password, salt);
+        userCreated.password = cryptedPass;
         await userCreated.save();
         res.status(201).json(userCreated);
         console.log(`${userCreated.companyName} created succefuly`);
@@ -57,8 +51,37 @@ const register = async(req,res)=>{
         const errors = handleErrors(err);
         res.status(400).json(errors);
     }
+}
 
-};
+    const login = async(req,res) => {
+        try{
+            data = req.body;
+            const user = await User.findOne({email:data.email});
+            if (!user){
+                res.status(404).json("email dosnt exist!");
+            }else{
+                console.log("user:", user.email);
+                const validPass = bcrypt.compareSync(data.password, user.password);
+                if(!validPass){
+                    res.status(401).json('Email or password invalid ! ')
+                }else{
+                    payload = {
+                        _id: user._id,
+                        email: user.email,
+                        name: user.name,
+                        role: user.role
+                    }
+                    token = jwt.sign(payload, 'DappSecret');
+                    res.status(200).json({mytoken: token,role:user.role});
+                }    
+            }
+        }catch(err){
+            const errors = handleErrors(err);
+            res.status(400).json(errors);
+        }
+    }
+    
+
 
 const deleteUsrById = async(req,res)=>{
 
@@ -129,6 +152,7 @@ module.exports = {
     findUsrById,
     findUsrByRole,
     findUsrAll,
-    updateUsrById
+    updateUsrById,
+    login
 
 }
