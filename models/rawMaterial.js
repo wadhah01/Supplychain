@@ -29,9 +29,10 @@ const RawMaterial = mongoose.model('RawMaterial',{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    certification:{
+    certificationImage: {
         type: String,
-    },
-})
+    }
+   
+});
 
 module.exports = RawMaterial;

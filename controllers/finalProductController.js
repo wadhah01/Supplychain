@@ -5,7 +5,7 @@ const createFP = async (req,res)=>{
     try{
 
         const FPData = req.body;
-        const newFP = new FinalProduct(FPData);
+        const newFP = new FinalProduct({...FPData,FPImage:req.file.path});
         const savedFP = await newFP.save();
         res.status(200).send(savedFP);
         console.log(savedFP);
