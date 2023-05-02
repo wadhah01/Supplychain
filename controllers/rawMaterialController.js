@@ -1,11 +1,11 @@
 const RawMaterial = require('../models/rawMaterial');
 
-
 const createRM = async (req,res)=>{
 
     try{
+
         const RMData = req.body;
-        const newRM = new RawMaterial({...RMData,certificationImage:req.file.path});
+        const newRM = new RawMaterial(RMData);
         const savedRM = await newRM.save();
         res.status(200).send(savedRM);
         console.log(savedRM);

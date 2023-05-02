@@ -5,7 +5,6 @@ const router = Router();
 
 
 router.post('/register', userController.register);
-router.post('/login', userController.login);
 router.get('/findUsrById/:id',userController.findUsrById);
 router.get('/findUsrByRole/:role',userController.findUsrByRole);
 router.get('/findUsrAll',userController.findUsrAll);

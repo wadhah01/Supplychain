@@ -26,9 +26,6 @@ const FinalProduct = mongoose.model('FinalProduct',{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    FPImage:{
-        type : String
-    }
 })
 
 module.exports = FinalProduct;

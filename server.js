@@ -11,7 +11,7 @@ require('./config/connect');
 const app = express();
 app.use(express.json()); 
 
-app.use("/uploads", express.static("uploads"));
+
 
 // Server Port
 app.listen(3000, ()=>{
